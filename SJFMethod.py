@@ -64,6 +64,7 @@ def SJF(arrival_time_o, burst_time_1, io_time, burst_time_2):
     for i in range(len(io_time)):
         io_finished_at.append(-1)
         complete_time.append(-1)
+        response_time.append(-1)
     while not is_done(status):
         # find the next process that should execute
         process_turn = next_process_SJF(arrival_time, io_finished_at, burst_time_1, burst_time_2, cpu_time)
@@ -71,7 +72,7 @@ def SJF(arrival_time_o, burst_time_1, io_time, burst_time_2):
         # this condition is true when process want to execute 'cpu time 1'
         if status[process_turn] == 'CP' and arrival_time[process_turn] <= cpu_time:
             temp = cpu_time - arrival_time[process_turn]
-            response_time.append(temp)
+            response_time[process_turn] = temp
             cpu_time += burst_time_1[process_turn]
             status[process_turn] = 'IO'
             arrival_time[process_turn] = -1

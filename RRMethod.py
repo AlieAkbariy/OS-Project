@@ -1,5 +1,5 @@
 from SharedMethod import calculate_tat_wt, is_done, build_status
-
+from FCFSMethod import find_next_process
 
 # this method find the index of next process that want to execute in RR algorithm
 def next_process_RR(process_list):
@@ -23,20 +23,19 @@ def RR(arrival_time_o, burst_time_1_o, io_time, burst_time_2_o):
         process_list.append(i)
         io_finished_at.append(-1)
         complete_time.append(-1)
+        response_time.append(-1)
     while not is_done(status):
-        i = 0
-        while i < len(process_list):  # try to find next process to execute
+        process_turn_o = find_next_process(arrival_time, io_finished_at)
+        process_turn = process_list[0]
+
+        while process_turn_o != process_turn:  # try to find next process to execute
             process_list, process_turn = next_process_RR(process_list)
-            if (arrival_time[process_turn] <= cpu_time and arrival_time[process_turn] != -1) or \
-                    (io_finished_at[process_turn] <= cpu_time and io_finished_at[process_turn] != -1):
-                break
-            i += 1
 
         # this condition is true when process want to execute 'cpu time 1'
         if status[process_turn] == 'CP' and arrival_time[process_turn] <= cpu_time and arrival_time[process_turn] != -1:
             if burst_time_1[process_turn] <= 5:  # when burst time is lower than time quantum
                 temp = cpu_time - arrival_time[process_turn]
-                response_time.append(temp)
+                response_time[process_turn] = temp
                 cpu_time += burst_time_1[process_turn]
                 burst_time_1[process_turn] = 0
                 status[process_turn] = 'IO'  # change status to 'IO Operation'
