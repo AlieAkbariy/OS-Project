@@ -19,14 +19,19 @@ def RR(arrival_time_o, burst_time_1_o, io_time, burst_time_2_o):
     response_time = list()
     status = build_status(arrival_time)
     cpu_time = 0
+    process_turn = 0
     for i in range(len(io_time)):
         process_list.append(i)
         io_finished_at.append(-1)
         complete_time.append(-1)
         response_time.append(-1)
+    process_turn = process_list[0]
     while not is_done(status):
         process_turn_o = find_next_process(arrival_time, io_finished_at)
-        process_turn = process_list[0]
+        if process_turn_o == process_turn:
+            process_turn_o = process_list[0]
+        else:
+            process_turn = process_list[0]
 
         while process_turn_o != process_turn:  # try to find next process to execute
             process_list, process_turn = next_process_RR(process_list)
